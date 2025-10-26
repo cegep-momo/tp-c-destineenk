@@ -91,6 +91,21 @@ vector<Book*> Library::getAllBooks() {
     return allBooks;
 }
 
+// Tri des résultats par titre
+void Library::displayBooksSortedByTitle(){
+    std:: sort(books.begin(), books.end(),
+        [](const Book& a, Book& b) {
+            return a.getTitle() < b.getTitle();
+        }
+
+    );
+}
+    
+
+
+
+
+
 // Add user to library
 void Library::addUser(const User& user) {
     users.push_back(make_unique<User>(user));
