@@ -91,19 +91,48 @@ vector<Book*> Library::getAllBooks() {
     return allBooks;
 }
 
-// Tri des résultats par titre
+
+// Trier les résultats par titre
+
 void Library::displayBooksSortedByTitle(){
-    std:: sort(books.begin(), books.end(),
-        [](const Book& a, Book& b) {
-            return a.getTitle() < b.getTitle();
+    if (books.empty()) {
+        cout << "Aucun livre à trier par titre.\n";
+        return;
+    }
+
+    sort(books.begin(), books.end(),
+        [](const unique_ptr<Book>& a,  const unique_ptr<Book>& b) {
+            return a->getTitle() < b->getTitle();
         }
-
     );
+
+    cout << "\n=== TOUS LES LIVRES TRIÉS PAR TITRE ===\n";
+    for (size_t i = 0; i < books.size(); ++i) {
+        cout << "\nLivre " << (i + 1) << " :\n";
+        cout << books[i]->toString() << "\n";
+        cout << "-------------------------\n";
+    }
 }
-    
+// Trier les résultats par auteur
+void Library::displayBooksSortedByAuthor(){
+    if (books.empty()) {
+        cout << "Aucun livre à trier par auteur.\n";
+        return;
+    }
 
+    sort(books.begin(), books.end(),
+        [](const unique_ptr<Book>& a,  const unique_ptr<Book>& b) {
+            return a->getAuthor() < b->getAuthor();
+        }
+    );
 
-
+    cout << "\n=== TOUS LES LIVRES TRIÉS PAR AUTEUR ===\n";
+    for (size_t i = 0; i < books.size(); ++i) {
+        cout << "\nLivre " << (i + 1) << " :\n";
+        cout << books[i]->toString() << "\n";
+        cout << "-------------------------\n";
+    }
+}
 
 
 // Add user to library
