@@ -123,18 +123,29 @@ vector<User*> Library::getAllUsers() {
 }
 
 // Check out book
-bool Library::checkOutBook(const string& isbn, const string& userId) {
+bool Library::checkOutBook(const std::string& isbn, const std::string& userId) {
     Book* book = findBookByISBN(isbn);
-    User* user = findUserById(userId);
-    
-    if (book && user && book->getAvailability()) {
-        book->checkOut(user->getName());
-        user->borrowBook(isbn);
-        this->saveLogData(user->getName() + "|" + book->getTitle() +"| emprunté");
-        return true;
+    if (!book) {
+        std::cout << "Erreur : ISBN introuvable (" << isbn << ").\n";
+        return false;
     }
-    return false;
+    User* user = findUserById(userId);
+    if (!user) {
+        std::cout << "Erreur : Utilisateur introuvable (ID: '" << userId << "').\n";
+        return false;
+    }
+    if (!book->getAvailability()) {
+        std::cout << "Erreur : Livre déjà emprunté par " << book->getBorrowerName() << ".\n";
+        return false;
+    }
+
+    book->checkOut(user->getName());
+    user->borrowBook(isbn);
+    saveLogData(user->getName() + " | " + book->getTitle() + " | emprunté");
+    std::cout << "Emprunt réussi : " << book->getTitle() << " -> " << user->getName() << "\n";
+    return true;
 }
+
 
 // Return book
 bool Library::returnBook(const string& isbn) {
