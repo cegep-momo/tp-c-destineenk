@@ -38,6 +38,7 @@ bool FileManager::saveBooksToFile(Library& library) {
     return true;
 }
 
+
 // Save users to file
 bool FileManager::saveUsersToFile(Library& library) {
     ofstream file(usersFileName);

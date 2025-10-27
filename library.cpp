@@ -1,7 +1,9 @@
 #include <iostream>
 #include <algorithm>
-
 #include "library.h"
+#include <fstream>
+#include <ctime>
+
 
 using namespace std;
 
@@ -92,47 +94,8 @@ vector<Book*> Library::getAllBooks() {
 }
 
 
-// Trier les résultats par titre
 
-void Library::displayBooksSortedByTitle(){
-    if (books.empty()) {
-        cout << "Aucun livre à trier par titre.\n";
-        return;
-    }
 
-    sort(books.begin(), books.end(),
-        [](const unique_ptr<Book>& a,  const unique_ptr<Book>& b) {
-            return a->getTitle() < b->getTitle();
-        }
-    );
-
-    cout << "\n=== TOUS LES LIVRES TRIÉS PAR TITRE ===\n";
-    for (size_t i = 0; i < books.size(); ++i) {
-        cout << "\nLivre " << (i + 1) << " :\n";
-        cout << books[i]->toString() << "\n";
-        cout << "-------------------------\n";
-    }
-}
-// Trier les résultats par auteur
-void Library::displayBooksSortedByAuthor(){
-    if (books.empty()) {
-        cout << "Aucun livre à trier par auteur.\n";
-        return;
-    }
-
-    sort(books.begin(), books.end(),
-        [](const unique_ptr<Book>& a,  const unique_ptr<Book>& b) {
-            return a->getAuthor() < b->getAuthor();
-        }
-    );
-
-    cout << "\n=== TOUS LES LIVRES TRIÉS PAR AUTEUR ===\n";
-    for (size_t i = 0; i < books.size(); ++i) {
-        cout << "\nLivre " << (i + 1) << " :\n";
-        cout << books[i]->toString() << "\n";
-        cout << "-------------------------\n";
-    }
-}
 
 
 // Add user to library
@@ -167,6 +130,7 @@ bool Library::checkOutBook(const string& isbn, const string& userId) {
     if (book && user && book->getAvailability()) {
         book->checkOut(user->getName());
         user->borrowBook(isbn);
+        this->saveLogData(user->getName() + "|" + book->getTitle() +"| emprunté");
         return true;
     }
     return false;
@@ -181,6 +145,7 @@ bool Library::returnBook(const string& isbn) {
         for (auto& user : users) {
             if (user->hasBorrowedBook(isbn)) {
                 user->returnBook(isbn);
+                this->saveLogData(user->getName() + "|" + book->getTitle() +"| retourné");
                 break;
             }
         }
@@ -246,3 +211,63 @@ int Library::getAvailableBookCount() const {
         });
 }
 int Library::getCheckedOutBookCount() const { return getTotalBooks() - getAvailableBookCount(); }
+
+// Trier les résultats par titre
+
+void Library::displayBooksSortedByTitle(){
+    if (books.empty()) {
+        cout << "Aucun livre à trier par titre.\n";
+        return;
+    }
+
+    sort(books.begin(), books.end(),
+        [](const unique_ptr<Book>& a,  const unique_ptr<Book>& b) {
+            return a->getTitle() < b->getTitle();
+        }
+    );
+
+    cout << "\n=== TOUS LES LIVRES TRIÉS PAR TITRE ===\n";
+    for (size_t i = 0; i < books.size(); ++i) {
+        cout << "\nLivre " << (i + 1) << " :\n";
+        cout << books[i]->toString() << "\n";
+        cout << "-------------------------\n";
+    }
+}
+// Trier les résultats par auteur
+void Library::displayBooksSortedByAuthor(){
+    if (books.empty()) {
+        cout << "Aucun livre à trier par auteur.\n";
+        return;
+    }
+
+    sort(books.begin(), books.end(),
+        [](const unique_ptr<Book>& a,  const unique_ptr<Book>& b) {
+            return a->getAuthor() < b->getAuthor();
+        }
+    );
+
+    cout << "\n=== TOUS LES LIVRES TRIÉS PAR AUTEUR ===\n";
+    for (size_t i = 0; i < books.size(); ++i) {
+        cout << "\nLivre " << (i + 1) << " :\n";
+        cout << books[i]->toString() << "\n";
+        cout << "-------------------------\n";
+    }
+}
+
+//sauvegarder données d'emprunt
+void Library::saveLogData(const std::string& message){
+    std::ofstream file("logs_donnees.txt", std::ios::app); 
+    if(!file.is_open()) {
+        std::cout << "Impossible d'ouvrir le fichier des logs de données !" << std::endl;
+        return;
+    }
+
+    std::time_t t = std::time(nullptr);
+    std::tm* now = std::localtime(&t);
+
+    char timestamp[20];
+    std::strftime(timestamp, sizeof(timestamp),"%Y-%m-%d %H:%M:%S", now);
+
+    file << timestamp << "|" <<message <<std::endl;
+
+}

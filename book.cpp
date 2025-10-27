@@ -1,6 +1,8 @@
 #include "book.h"
 #include <iostream>
 #include <sstream>
+#include <string>
+
 
 // Constructeur par défaut
 Book::Book() : title(""), author(""), isbn(""), isAvailable(true), borrowerName("") {

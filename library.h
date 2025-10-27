@@ -46,7 +46,10 @@ public:
     //Tri
     void displayBooksSortedByTitle();
     void displayBooksSortedByAuthor();
-    // Statistics
+
+    //sauvegarde
+    void saveLogData(const std::string& message);
+    //statistics
     int getTotalBooks() const;
     int getAvailableBookCount() const;
     int getCheckedOutBookCount() const;

@@ -34,6 +34,7 @@ void displayMenu() {
     cout << "13. Créer une Sauvegarde\n";
     cout << "14. Afficher les livres triés par titre\n";
     cout << "15. Afficher les livres triés par auteur\n";
+    cout << "16. Afficher les données\n";
     cout << "0.  Quitter\n";
     cout << "======================================================\n";
     cout << "Entrez votre choix : ";
@@ -245,6 +246,8 @@ int main() {
                 pauseForInput();
                 break;
             }
+            
+            
             case 0: // Exit
                 cout << "Sauvegarde des données avant la fermeture...\n";
                 fileManager.saveLibraryData(library);
