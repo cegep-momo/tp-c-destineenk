@@ -73,10 +73,11 @@ void Book::returnBook() {
    
 }
 
-string Book:: toString() const {
-    string statut = isAvailable ? "Disponible: ": "Emprunté par: " + borrowerName;
-    return "Titre: " + title + ", Auteur: " + author + ", ISBN: " + isbn + ", Statut" + statut;
+string Book::toString() const {
+    string statut = isAvailable ? "Disponible" : ("Emprunté par: " + borrowerName);
+    return "Titre: " + title + ", Auteur: " + author + ", ISBN: " + isbn + ", Statut: " + statut;
 }
+
 
 string Book::toFileFormat() const {
     std::stringstream bookTxt;
